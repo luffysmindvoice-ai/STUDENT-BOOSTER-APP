@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Booster App</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 600px;
+            padding: 30px;
+            min-height: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .screen {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-align: center;
+            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #34495e;
+            text-align: center;
+        }
+
+        .btn {
+            background: #6c5ce7;
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            text-align: center;
+        }
+
+        .btn:hover {
+            background: #5b4bc4;
+            transform: translateY(-2px);
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dfe6e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        select:focus, input:focus, textarea:focus {
+            border-color: #6c5ce7;
+        }
+
+        .grid-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .mcq-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mcq-option:hover {
+            border-color: #6c5ce7;
+            background: #f1f0fe;
+        }
+
+        .mcq-option.selected {
+            background: #6c5ce7;
+            color: white;
+            border-color: #6c5ce7;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid #6c5ce7;
+            margin-bottom: 15px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- Screen 1: Welcome -->
+    <div id="screen1" class="screen active">
+        <h1>Students Booster App</h1>
+        <p style="text-align: center; color: #636e72;">Empower your learning journey step-by-step.</p>
+        <button class="btn" onclick="nextScreen(2)">Next</button>
+    </div>
+
+    <!-- Screen 2: Grade Selection -->
+    <div id="screen2" class="screen">
+        <h2>Select Your Grade</h2>
+        <select id="gradeSelect">
+            <option value="" disabled selected>Choose your class</option>
+            <script>
+                for(let i=1; i<=12; i++){
+                    document.write(`<option value="Class ${i}">Class ${i}</option>`);
+                }
+            </script>
+        </select>
+        <button class="btn" onclick="nextScreen(3)">Next</button>
+    </div>
+
+    <!-- Screen 3: Self-Assessment -->
+    <div id="screen3" class="screen">
+        <h2>Strengths & Weaknesses</h2>
+        <textarea id="strengths" placeholder="Enter your strengths (e.g., Problem solving, Algebra)..."></textarea>
+        <textarea id="weaknesses" placeholder="Enter your weaknesses (e.g., Memorization, Grammar)..."></textarea>
+        <button class="btn" onclick="nextScreen(4)">Next</button>
+    </div>
+
+    <!-- Screen 4: Performance Level -->
+    <div id="screen4" class="screen">
+        <h2>How do you evaluate yourself?</h2>
+        <div class="grid-options">
+            <button class="btn" onclick="setLevel('Topper'); nextScreen(5)">Topper</button>
+            <button class="btn" onclick="setLevel('Average'); nextScreen(5)">Average</button>
+            <button class="btn" onclick="setLevel('Below Average'); nextScreen(5)">Below Average</button>
+        </div>
+    </div>
+
+    <!-- Screen 5: Subject Selection -->
+    <div id="screen5" class="screen">
+        <h2>Select Subject</h2>
+        <div class="grid-options">
+            <button class="btn" onclick="setSubject('English'); nextScreen(6)">English</button>
+            <button class="btn" onclick="setSubject('Tamil'); nextScreen(6)">Tamil</button>
+            <button class="btn" onclick="setSubject('Math'); nextScreen(6)">Math</button>
+            <button class="btn" onclick="setSubject('Social Science'); nextScreen(6)">Social Science</button>
+            <button class="btn" style="grid-column: span 2;" onclick="setSubject('Science'); nextScreen(6)">Science</button>
+        </div>
+    </div>
+
+    <!-- Screen 6: Difficulty Level -->
+    <div id="screen6" class="screen">
+        <h2>Select Difficulty</h2>
+        <div class="grid-options">
+            <button class="btn" onclick="setDifficulty('Easy'); startQuiz()">Easy</button>
+            <button class="btn" onclick="setDifficulty('Medium'); startQuiz()">Medium</button>
+            <button class="btn" style="grid-column: span 2;" onclick="setDifficulty('Hard'); startQuiz()">Hard</button>
+        </div>
+    </div>
+
+    <!-- Screen 7: MCQ Quiz -->
+    <div id="screen7" class="screen">
+        <h2 id="quizHeader">Questions</h2>
+        <div id="questionContainer"></div>
+        <div class="nav-buttons">
+            <button class="btn" id="prevBatchBtn" onclick="changeBatch(-1)" disabled>Previous 10</button>
+            <button class="btn" id="nextBatchBtn" onclick="changeBatch(1)">Next 10</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let userData = {};
+    let currentBatch = 0;
+    const batchSize = 10;
+
+    function nextScreen(screenNumber) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(`screen${screenNumber}`).classList.add('active');
+    }
+
+    function setLevel(level) { userData.level = level; }
+    function setSubject(subject) { userData.subject = subject; }
+    function setDifficulty(diff) { userData.difficulty = diff; }
+
+    function generateQuestion(index) {
+        const sub = userData.subject || "Subject";
+        const diff = userData.difficulty || "Level";
+        return {
+            id: index + 1,
+            question: `[${sub} - ${diff}] Question ${index + 1}: What is the correct statement regarding concept #${index + 1}?`,
+            options: [
+                `Option A for Question ${index + 1}`,
+                `Option B for Question ${index + 1}`,
+                `Option C for Question ${index + 1}`,
+                `Option D for Question ${index + 1}`
+            ]
+        };
+    }
+
+    function startQuiz() {
+        currentBatch = 0;
+        nextScreen(7);
+        renderBatch();
+    }
+
+    function renderBatch() {
+        const container = document.getElementById('questionContainer');
+        const header = document.getElementById('quizHeader');
+        container.innerHTML = '';
+        
+        const start = currentBatch * batchSize;
+        const end = start + batchSize;
+        
+        header.innerText = `${userData.subject} (${userData.difficulty}) - Q${start + 1} to Q${end}`;
+
+        for (let i = start; i < end; i++) {
+            const q = generateQuestion(i);
+            const qEl = document.createElement('div');
+            qEl.className = 'question-card';
+            qEl.innerHTML = `
+                <p style="font-weight: bold; margin-bottom: 10px;">${q.question}</p>
+                <div class="grid-options">
+                    ${q.options.map(opt => `<div class="mcq-option" onclick="selectOption(this)">${opt}</div>`).join('')}
+                </div>
+            `;
+            container.appendChild(qEl);
+        }
+
+        document.getElementById('prevBatchBtn').disabled = (currentBatch === 0);
+    }
+
+    function selectOption(element) {
+        const parent = element.parentElement;
+        parent.querySelectorAll('.mcq-option').forEach(opt => opt.classList.remove('selected'));
+        element.classList.add('selected');
+    }
+
+    function changeBatch(direction) {
+        currentBatch += direction;
+        if (currentBatch < 0) currentBatch = 0;
+        renderBatch();
+    }
+</script>
+
+</body>
+              </html>
